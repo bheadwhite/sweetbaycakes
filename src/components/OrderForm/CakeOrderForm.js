@@ -1,7 +1,7 @@
 import React from "react"
 import "./CakeOrderForm.css"
 
-const Form = () => (
+const Form = props => (
 	<div className='cakeOrderForm'>
 		<form>
 			<p className='title'>What can we make for you?</p>
@@ -12,10 +12,10 @@ const Form = () => (
 				</div>
 				<div className='checkCol'>
 					<p>
-						<input type='checkbox' />
+						<input name='makeCake' type='checkbox' value='test' onChange={props.handleChange} />
 					</p>
 					<p>
-						<input type='checkbox' />
+						<input name='makeCupcakes' type='checkbox' onChange={props.handleChange} />
 					</p>
 				</div>
 				<div>
@@ -24,16 +24,16 @@ const Form = () => (
 				</div>
 				<div className='checkCol'>
 					<p>
-						<input type='checkbox' />
+						<input name='makeParfait' type='checkbox' onChange={props.handleChange} />
 					</p>
 					<p>
-						<input type='checkbox' />
+						<input name='makeCookies' type='checkbox' onChange={props.handleChange} />
 					</p>
 				</div>
 			</div>
 			<p>
 				Cake size:
-				<select id='cakeSize' onChange={e => this.setState({ cstCakeSize: e.target.value })}>
+				<select name='cakeSize' id='cakeSize' onChange={props.handleChange}>
 					<option>Choose...</option>
 					<option value='4'>4 inches</option>
 					<option value='6'>6 inches</option>
@@ -45,7 +45,7 @@ const Form = () => (
 			</p>
 			<p>
 				Orientation:
-				<select id='cakeOrienetation' onChange={e => this.setState({ cstOrientation: e.target.value })}>
+				<select name='cakeOrientation' id='cakeOrienetation' onChange={props.handleChange}>
 					<option>Choose...</option>
 					<option value='Round'>Round</option>
 					<option value='Square'>Square </option>
@@ -54,7 +54,7 @@ const Form = () => (
 			</p>
 			<p>
 				Flavor of Cake:
-				<select id='cakeFlavor' onChange={e => this.setState({ cstFlavor: e.target.value })}>
+				<select name='cakeFlavor' id='cakeFlavor' onChange={props.handleChange}>
 					<option>Choose...</option>
 					<option value='Chocolate'>Chocolate</option>
 					<option value='White'>White</option>
@@ -68,8 +68,8 @@ const Form = () => (
 				</select>
 			</p>
 			<p>
-				Buttercream / Icing Flavors:
-				<select id='creamFlavor' onChange={e => this.setState({ cstCream: e.target.value })}>
+				Buttercream / Icing Flavor:
+				<select name='cakeCream' id='creamFlavor' onChange={props.handleChange}>
 					<option>Choose...</option>
 					<option value='Chocolate'>Chocolate</option>
 					<option value='Vanilla'>Vanilla</option>
@@ -83,7 +83,7 @@ const Form = () => (
 			</p>
 			<p>
 				Extra Fillings:
-				<select id='cakeFillings' onChange={e => this.setState({ cstFillings: e.target.value })}>
+				<select name='cakeFillings' id='cakeFillings' onChange={props.handleChange}>
 					<option>Choose...</option>
 					<option value='None'>None</option>
 					<option value='Ganache'>Ganache</option>
@@ -92,18 +92,35 @@ const Form = () => (
 				</select>
 			</p>
 			<div className='specialInstructions'>
-				<label placeholder='for example.. Sayings on cake'>
-					Additional requests:
-				</label>
+				<label placeholder='for example.. Sayings on cake'>Additional requests:</label>
 				<div>
-				<textarea className="addRequests" rows='5' onChange={e => this.setState({ cstMessage: e.target.value })} />
+					<textarea name='cakeRequest' className='addRequests' rows='5' onChange={props.handleChange} />
 				</div>
 				<div>
 					<label className='upload' htmlFor='cakeIdea'>
 						If you have a picture of your cake.
 					</label>
 					<div>Upload here:</div>
-					<input type='file' accept='image/png, image/jpeg' multiple onChange={e => this.setState({ cstPic: e.target.value })} />
+					<input
+						type='file'
+						id='selectedFile'
+						accept='image/png, image/jpeg'
+						multiple
+						onChange={props.handleFile}
+						style={{ display: "none" }}
+					/>
+					<input
+						type='button'
+						value='Select File...'
+						onClick={() => document.getElementById("selectedFile").click()}
+						style={{ marginBottom: "1rem" }}
+					/>
+					{props.pics &&
+						props.pics.map((thisImage, i) => (
+							<div className='thumbnail' key={i}>
+								<img onClick={() => props.removeThumb(i)} src={thisImage} alt='thumbnail' />
+							</div>
+						))}
 				</div>
 			</div>
 		</form>

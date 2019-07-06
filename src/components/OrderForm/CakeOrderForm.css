@@ -2,7 +2,7 @@
   padding: 0 1rem;
 }
 .cakeOrderForm .title {
-  margin-bottom: 0;
+  margin: 0;
 }
 .makeWhat {
   display: flex;
@@ -21,8 +21,14 @@
 .checkCol {
   margin: 0 1rem;
 }
+.cakeOrderForm p {
+  white-space: nowrap;
+}
 .addRequests {
   border: 1px solid lightgrey;
   width: 100%;
   max-width: 550px;
+}
+.thumbnail img {
+  max-width: 100px;
 }

@@ -14,3 +14,21 @@ html, body {
 	max-width: 100%;
 	overflow-x: hidden;
 }
+
+textarea {
+	border: 1px solid lightgrey;
+	width: 100%;
+	max-width: 550px;
+}
+
+select {
+	border: 1px solid lightgrey;
+	margin-left: 5px;
+	cursor: pointer;
+}
+input:not([text="checkbox"]), button {
+	border: 1px solid lightgrey;
+}
+input, button {
+	cursor: pointer;
+}
