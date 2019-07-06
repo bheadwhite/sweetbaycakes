@@ -24,4 +24,5 @@
 .addRequests {
   border: 1px solid lightgrey;
   width: 100%;
+  max-width: 550px;
 }
