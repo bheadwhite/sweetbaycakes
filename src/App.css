@@ -1,107 +1,16 @@
-/* ******************************* Big Styles ******************************* */
-.App {
-  z-index: -1;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-form {
-  text-align: center;
-  width: 65%;
-}
-form p {
-  display: flex;
-  justify-content: space-around;
-  max-width: 300px;
-  margin: 10px auto;
-}
-form p select {
-  margin-left: auto;
-  width: 150px;
-}
-input[type='text'], input[type='tel'] {
-  font-size: 15px;
-}
-/* ******************************* Title/subtitle ******************************* */
-header,
-section {
-  text-align: center;
+/* ******************************* Global Styles ******************************* */
+.SweetBay {
+	max-width: 1201px;
+	box-sizing: border-box;
+	background: url('./assets/cake.svg');
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-color: rgba(255, 255, 255, .8);
+	background-position: 0 18%;
+	background-blend-mode: lighten;
 }
 
-section span {
-  font-size: 30px;
-}
-/* ******************************* Body ******************************* */
-.wrapper {
-  width: 100%;
-  display: flex;
-}
-/* ******************************* SpecialInstructions ******************************* */
-.specialInstructions {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-textarea {
-  font-size: 15px;
-}
-.specialInstructions label {
-  margin-top: 20px;
-}
-.upload {
-  margin-top: 20px;
-}
-/* ******************************* References ******************************* */
-.reference {
-  margin-right: 20px; 
-}
-.reference h5 {
-  margin: 3px;
-}
-.reference p {
-  margin-top: 2px;
-}
-.reference h3 {
-  margin-top: 0;
-}
-/* ******************************* cakePicture ******************************* */
-.form-cakeSize {
-  display: flex;
-  text-align: center;
-  justify-content: space-around;
-}
-.form-cakeSize-image img {
-  max-height: 100%;
-  max-width: 100%;
-  cursor: pointer;
-  width: 200px;
-  height: 200px;
-}
-.close {
-  position: absolute;
-  left: 0;
-  top: 1px;
-  max-height: 40px;
-  max-width: 40px;
-}
-.bigCakeSize-image {
-  position: fixed;
-  top: 30px;
-  left: 41%;
-  height: 60%;
-  border-radius: 5px;
-  border: 1px solid black;
-  transition: 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-
-  z-index: 1;
-}
-.bigCakeSize-image img {
-  max-height: 100%;
-}
-.hidden {
-  left: 5000px;
-}
-/* ******************************* Customer Info ******************************* */
-.customerForm {
-  margin-top: 30px;
-  text-align: center;
+html, body {
+	max-width: 100%;
+	overflow-x: hidden;
 }

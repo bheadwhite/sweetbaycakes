@@ -1,0 +1,16 @@
+
+img.orderFormBackground {
+  display: none;
+  z-index: -100;
+  position: sticky;
+  left: 0;
+  top: 0;
+  width: 100%;
+  opacity: 0.1;
+}
+
+.specialInstructions label {
+  margin-top: 20px;
+}
+
+
