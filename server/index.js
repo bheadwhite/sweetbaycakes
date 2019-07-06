@@ -61,6 +61,11 @@ app.post("/api/submitForm", (req, res) => {
 app.get('/api/get', (req, res) => {
     res.send(happyDay)
 })
+app.use('/*', (req,res) => {
+  res.sendFile('index.html', {
+    root:(`${__dirname}/..build`)
+  })
+})
 port = 3001;
 app.listen(port, () => {
   console.log(`listening on ${port}`);
