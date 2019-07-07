@@ -16,9 +16,11 @@ const Details = props => (
 			</div>
 		</div>
 		<div>
-			<label>additional contact details:</label>
+			<label>Additional contact details:</label>
 		</div>
-		<textarea name='contactDetails' onChange={props.handleChange} />
+		<div>
+			<textarea name='contactDetails' onChange={props.handleChange} />
+		</div>
 		<button onClick={props.sendEmail}>Submit Order</button>
 	</div>
 )

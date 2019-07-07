@@ -1,5 +1,6 @@
 import React from "react"
 import "./CakeOrderForm.css"
+import imageIcon from "./../../assets/image.svg"
 
 const Form = props => (
 	<div className='cakeOrderForm'>
@@ -31,7 +32,7 @@ const Form = props => (
 					</p>
 				</div>
 			</div>
-			<p>
+			<p className="cakeSizeP">
 				Cake size:
 				<select name='cakeSize' id='cakeSize' onChange={props.handleChange}>
 					<option>Choose...</option>
@@ -42,6 +43,7 @@ const Form = props => (
 					<option value='12'>12 inches</option>
 					<option value='14'>14 inches</option>
 				</select>
+				<img className='imageIcon' src={imageIcon} alt='icon' onClick={props.toggleModel} />
 			</p>
 			<p>
 				Orientation:
@@ -82,7 +84,7 @@ const Form = props => (
 				</select>
 			</p>
 			<p>
-				Extra Fillings:
+				Extra Fillings<sub className="asterisk">*</sub>:
 				<select name='cakeFillings' id='cakeFillings' onChange={props.handleChange}>
 					<option>Choose...</option>
 					<option value='None'>None</option>
@@ -98,29 +100,33 @@ const Form = props => (
 				</div>
 				<div>
 					<label className='upload' htmlFor='cakeIdea'>
-						If you have a picture of your cake.
+						If you have a picture of your cake,
 					</label>
-					<div>Upload here:</div>
-					<input
-						type='file'
-						id='selectedFile'
-						accept='image/png, image/jpeg'
-						multiple
-						onChange={props.handleFile}
-						style={{ display: "none" }}
-					/>
-					<input
-						type='button'
-						value='Select File...'
-						onClick={() => document.getElementById("selectedFile").click()}
-						style={{ marginBottom: "1rem" }}
-					/>
-					{props.pics &&
-						props.pics.map((thisImage, i) => (
-							<div className='thumbnail' key={i}>
-								<img onClick={() => props.removeThumb(i)} src={thisImage} alt='thumbnail' />
-							</div>
-						))}
+					<div className='upload'>
+						<span>upload here:</span>
+						<input
+							type='file'
+							id='selectedFile'
+							accept='image/png, image/jpeg'
+							multiple
+							onChange={props.handleFile}
+							style={{ display: "none" }}
+						/>
+						<input
+							type='button'
+							value='Select File...'
+							onClick={() => document.getElementById("selectedFile").click()}
+							style={{ marginBottom: ".3rem", marginLeft: "5px" }}
+						/>
+					</div>
+					<div className='thumbnails'>
+						{props.pics &&
+							props.pics.map((thisImage, i) => (
+								<div className='thumbnail' key={i}>
+									<img onClick={() => props.removeThumb(i)} src={thisImage} alt='thumbnail' />
+								</div>
+							))}
+					</div>
 				</div>
 			</div>
 		</form>

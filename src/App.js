@@ -2,17 +2,15 @@ import React, { Component } from "react"
 import "./App.css"
 import axios from "axios"
 // COMPONENTS
-import CakeBackground from "./components/CakeBackground/CakeBackground"
-// import Sidebar from "./components/SideBar/SideBar"
 import CakeOrderForm from "./components/OrderForm/CakeOrderForm"
 import Header from "./components/Header/Header"
 import CustomerDetails from "./components/CustomerDetails/CustomerDetails"
-// import CakeChart from "./components/CakeChart/CakeChart"
+import CakeChart from "./components/CakeChart/CakeChart"
 
 class App extends Component {
 	state = {
 		order: {},
-		bigImage: false
+		viewModel: false
 	}
 	getHappy() {
 		axios.get("/api/get").then(res => {
@@ -74,6 +72,11 @@ class App extends Component {
 	handleError = e => {
 		e.target.src = "https://png.pngtree.com/svg/20170514/4a5e89db9c.png"
 	}
+	toggleModel = () => {
+		this.setState({
+			viewModel: !this.state.viewModel
+		})
+	}
 	removeThumb = key => {
 		let files = this.state.order.files.slice()
 		files.splice(key, 1)
@@ -85,7 +88,7 @@ class App extends Component {
 		})
 	}
 	render() {
-		console.log(this.state.order)
+		let viewModel = this.state.viewModel ? "model" : "model hidden"
 		return (
 			<div className='SweetBay'>
 				<Header />
@@ -94,12 +97,11 @@ class App extends Component {
 					handleChange={this.handleChange}
 					pics={this.state.order.files}
 					removeThumb={this.removeThumb}
+					toggleModel={this.toggleModel}
 				/>
 				<CustomerDetails handleChange={this.handleChange} sendEmail={this.sendEmail} />
 				{this.state.file && <img src={this.state.file} alt='pic' onError={this.handleError} />}
-				{/* <Sidebar /> */}
-				<CakeBackground />
-				{/* <CakeChart bigImage={this.state.bigImage ? "bigImage" : "hidden"} toggleChart={this.toggleChart} /> */}
+				<CakeChart viewModel={viewModel} toggleModel={this.toggleModel} />
 			</div>
 		)
 	}

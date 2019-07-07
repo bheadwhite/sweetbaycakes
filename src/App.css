@@ -1,5 +1,6 @@
 /* ******************************* Global Styles ******************************* */
 .SweetBay {
+	position: relative;
 	max-width: 1201px;
 	box-sizing: border-box;
 	background: url('./assets/cake.svg');

@@ -31,4 +31,19 @@
 }
 .thumbnail img {
   max-width: 100px;
+  border: 1px solid lightgrey;
+  margin-right: 5px;
+}
+.imageIcon {
+  cursor: pointer;
+  position: absolute;
+  width: 2rem;
+  margin-left: 2rem;
+}
+.thumbnails {
+  display: flex;
+  flex-wrap: wrap;
+}
+.cakeSizeP {
+  position: relative;
 }
