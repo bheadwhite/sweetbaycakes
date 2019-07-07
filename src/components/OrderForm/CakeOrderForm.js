@@ -84,7 +84,7 @@ const Form = props => (
 				</select>
 			</p>
 			<p>
-				Extra Fillings<sub className="asterisk">*</sub>:
+				Extra Fillings:
 				<select name='cakeFillings' id='cakeFillings' onChange={props.handleChange}>
 					<option>Choose...</option>
 					<option value='None'>None</option>

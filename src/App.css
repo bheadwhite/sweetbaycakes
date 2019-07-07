@@ -1,15 +1,14 @@
 /* ******************************* Global Styles ******************************* */
 .SweetBay {
 	position: relative;
-	max-width: 1201px;
+	max-width: 1200px;
 	box-sizing: border-box;
 	background: url('./assets/cake.svg');
 	background-repeat: no-repeat;
-	background-attachment: fixed;
 	background-color: rgba(255, 255, 255, .6);
-	background-position: 0 18%;
 	background-blend-mode: lighten;
 	padding-bottom: 300px;
+	margin: auto;
 }
 
 html, body {
