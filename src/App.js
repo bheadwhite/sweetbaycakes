@@ -89,7 +89,6 @@ class App extends Component {
 		})
 	}
 	render() {
-		console.log(this.state.order)
 		let viewModel = this.state.viewModel ? "model" : "model hidden"
 		return (
 			<div className='SweetBay'>
