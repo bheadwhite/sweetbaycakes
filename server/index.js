@@ -24,5 +24,5 @@ app.use("/*", (req, res) => {
 		root: `${__dirname}/..build`
 	})
 })
-
+module.exports = app
 module.exports.handler = serverless(app)
