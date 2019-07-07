@@ -18,8 +18,9 @@ class App extends Component {
 		})
 	}
 	sendEmail = () => {
-		console.log("sending the order:", this.state.order)
-		// axios.post("/api/submitForm", this.state.order)
+		axios.post("/api/submitForm", this.state.order).then(res => {
+			console.log(res)
+		})
 	}
 	toggleChart = () => {
 		this.setState({
@@ -88,6 +89,7 @@ class App extends Component {
 		})
 	}
 	render() {
+		console.log(this.state.order)
 		let viewModel = this.state.viewModel ? "model" : "model hidden"
 		return (
 			<div className='SweetBay'>
