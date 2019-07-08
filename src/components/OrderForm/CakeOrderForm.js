@@ -84,9 +84,8 @@ const Form = props => (
 				</select>
 			</p>
 			<p>
-				Extra Fillings:
+				Extra Cost Fillings:
 				<select name='cakeFillings' id='cakeFillings' onChange={props.handleChange}>
-					<option>Choose...</option>
 					<option value='None'>None</option>
 					<option value='Ganache'>Ganache</option>
 					<option value='Jelly'>Jelly</option>
@@ -96,7 +95,7 @@ const Form = props => (
 			<div className='specialInstructions'>
 				<label placeholder='for example.. Sayings on cake'>Additional requests:</label>
 				<div>
-					<textarea name='cakeRequest' className='addRequests' rows='5' onChange={props.handleChange} />
+					<textarea name='cakeRequest' className='addRequests' rows='5' onChange={props.handleChange} placeholder="(ie. sayings: Happy Birthday John, theme for cake..)"/>
 				</div>
 				<div>
 					<label className='upload' htmlFor='cakeIdea'>
