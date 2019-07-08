@@ -59,14 +59,19 @@ const Form = props => (
 				<select name='cakeFlavor' id='cakeFlavor' onChange={props.handleChange}>
 					<option>Choose...</option>
 					<option value='Chocolate'>Chocolate</option>
+					<option value='Vanilla'>Vanilla</option>
 					<option value='White'>White</option>
-					<option value='Strawberry'>Strawberry</option>
 					<option value='Yellow'>Yellow</option>
 					<option value='Funfetti'>Funfetti</option>
 					<option value='Red Velvet'>Red Velvet</option>
+					<option value='Strawberry'>Strawberry</option>
 					<option value='Almond'>Almond</option>
+					<option value='Almond Poppyseed'>Almond Poppyseed</option>
 					<option value='Lemon'>Lemon</option>
-					<option value='Cherry'>Cherry</option>
+					<option value='Lemon Poppyseed'>Lemon Poppyseed</option>
+					<option value='spice'>spice</option>
+					<option value='Blue Velvet'>Blue Velvet</option>
+					<option value='Strawberry Funfetti'>Strawberry Funfetti</option>
 				</select>
 			</p>
 			<p>
@@ -74,22 +79,39 @@ const Form = props => (
 				<select name='cakeCream' id='creamFlavor' onChange={props.handleChange}>
 					<option>Choose...</option>
 					<option value='Chocolate'>Chocolate</option>
+					<option value='Strawberry'>Strawberry</option>
+					<option value='Cream Cheese'>Cream Cheese</option>
 					<option value='Vanilla'>Vanilla</option>
 					<option value='Almond'>Almond</option>
 					<option value='Lemon'>Lemon</option>
-					<option value='Cream Cheese'>Cream Cheese</option>
-					<option value='Caramel'>Caramel</option>
-					<option value='Strawberry'>Strawberry</option>
 					<option value='Cookies &amp; Cream'>Cookies &amp; Cream</option>
+					<option value='Caramel'>Caramel</option>
+					<option value='Peppermint'>Peppermint</option>
 				</select>
 			</p>
 			<p>
 				Extra Cost Fillings:
 				<select name='cakeFillings' id='cakeFillings' onChange={props.handleChange}>
 					<option value='None'>None</option>
+					<option value='White Chocolate Ganache'>White Chocolate Ganache</option>
+					<option value='Milk Chocolate Ganache'>Milk Chocolate Ganache</option>
+					<option value='Vanilla Bavarian Cream'>Vanilla Bavarian Cream</option>
+					<option value='Chocolate Bavarian Cream'>Chocolate Bavarian Cream</option>
+					<option value='Key Lime'>Key Lime</option>
+					<option value='Coconut'>Coconut</option>
+					<option value='Jelly Strawberry'>Jelly Strawberry</option>
+					<option value='Raspberry'>Raspberry</option>
+					<option value='Pineapple'>Pineapple</option>
+					<option value='Lemon'>Lemon</option>
+					<option value='Cherry'>Cherry</option>
+					<option value='Blueberry'>Blueberry</option>
+					<option value='Apple'>Apple</option>
+					<option value='Peach'>Peach</option>
+					<option value='Fruit Raspberries'>Fruit Raspberries</option>
+					<option value='Strawberries'>Strawberries</option>
+					<option value='Candy Turtles'>Candy Turtles</option>
+					<option value='Brownies'>Brownies</option>
 					<option value='Ganache'>Ganache</option>
-					<option value='Jelly'>Jelly</option>
-					<option value='Bavarian Cream'>Bavarian Cream</option>
 				</select>
 			</p>
 			<div className='specialInstructions'>
