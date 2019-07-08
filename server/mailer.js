@@ -44,7 +44,7 @@ const sendMail = async outgoing => {
 	}
 	let info = await transporter.sendMail({
 		from: '"sweetbaycakes29@gmail.com" <sweetbaycakes29@gmail.com>', // sender address
-		to: "bheadwhite@gmail.com", // list of receivers
+		to: "lfletcher29@gmail.com", // list of receivers
 		subject: `Cake Order for ${outgoing.name}`, // Subject line
 		generateTextFromHTML: true, // plain text body
     html: `
