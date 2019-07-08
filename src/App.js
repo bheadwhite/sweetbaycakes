@@ -19,7 +19,10 @@ class App extends Component {
 	}
 	sendEmail = () => {
 		axios.post("/api/submitForm", this.state.order).then(res => {
-			console.log(res)
+			alert('Thank you for your order!')
+			this.setState({
+				order: {}
+			})
 		})
 	}
 	toggleChart = () => {
