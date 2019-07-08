@@ -5,7 +5,7 @@ const express = require("express"),
 	app = express(),
 	session = require("express-session"),
 	helmet = require("helmet"),
-	mailer= require("./mailer.js"),
+	mailer= require("./mailer.js")
 require("dotenv").config()
 
 app.use(cors(), bodyParser.json(), helmet(), express.static(`${__dirname}/../build`))
@@ -23,6 +23,7 @@ app.use("/*", (req, res) => {
 		root: `${__dirname}/..build`
 	})
 })
+
 const port = process.env.port || 3001
 app.listen(port, ()=>{
 	console.log(`listening on ${port}`)
