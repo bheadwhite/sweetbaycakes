@@ -30,7 +30,7 @@ const sendMail = async (outgoing) => {
   let makeMe = ''
   for(key in outgoing){
     if(key.startsWith('make') && key !== "makeText"){
-      makeMe.push(`<li>${key.slice(4)}</li>`)
+      makeMe = makeMe.concat(`<li>${key.slice(4)}</li>`)
     }
   }
 
