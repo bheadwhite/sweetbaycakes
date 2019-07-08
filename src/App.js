@@ -32,7 +32,7 @@ class App extends Component {
 			return
 		}
 		const { order } = this.state
-		let files = order.files || []
+		let files = order.blobs || []
 		if (e.target.files.length > 1) {
 			let fileSet = [...e.target.files]
 			fileSet.forEach(file => files.push(URL.createObjectURL(file)))
@@ -44,7 +44,8 @@ class App extends Component {
 			this.setState({
 				order: {
 					...this.state.order,
-					files: files
+					blobs: files,
+					files: e.target.files
 				}
 			})
 	}
@@ -79,16 +80,17 @@ class App extends Component {
 		})
 	}
 	removeThumb = key => {
-		let files = this.state.order.files.slice()
+		let files = this.state.order.blobs.slice()
 		files.splice(key, 1)
 		this.setState({
 			order: {
 				...this.state.order,
-				files: files
+				blobs: files
 			}
 		})
 	}
 	render() {
+		console.log(this.state.order)
 		let viewModel = this.state.viewModel ? "model" : "model hidden"
 		return (
 			<div className='SweetBay'>
@@ -96,7 +98,7 @@ class App extends Component {
 				<CakeOrderForm
 					handleFile={this.handleFile}
 					handleChange={this.handleChange}
-					pics={this.state.order.files}
+					pics={this.state.order.blobs}
 					removeThumb={this.removeThumb}
 					toggleModel={this.toggleModel}
 				/>

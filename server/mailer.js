@@ -33,12 +33,24 @@ const sendMail = async (outgoing) => {
       makeMe = makeMe.concat(`<li>${key.slice(4)}</li>`)
     }
   }
-
+  if(outgoing.makeText){
+    outgoing.makeText = 'yes'
+  } else {
+    outgoing.makeText = 'no'
+  }
+  let attachments= []
+  if(outgoing.files){
+    outgoing.files.forEach(file => {
+      attachments.push({cid: file})
+    })
+  }
+  console.log(attachments)
   let info = await transporter.sendMail({
       from: '"bwhitehe@gmail.com" <bwhitehe@gmail.com>', // sender address
       to: "bheadwhite@gmail.com", // list of receivers
-      subject: `contact submission from ${outgoing.name}`, // Subject line
+      subject: `sweetbaycakes Order for ${outgoing.name}`, // Subject line
       generateTextFromHTML: true, // plain text body
+      attachments: attachments,
       html: `
       <h3>Order for ${outgoing.name}</h3>
       <h5>phone number: ${outgoing.phoneNumber}</h5>
@@ -47,7 +59,7 @@ const sendMail = async (outgoing) => {
       <ul>
         ${makeMe}
       </ul>
-      <p>size: ${outgoing.cakeSize}</p>
+      <p>size: ${outgoing.cakeSize} inches</p>
       <p>orientation: ${outgoing.cakeOrientation}</p>
       <p>flavor: ${outgoing.cakeFlavor}</p>
       <p>Icing/Cream: ${outgoing.cakeCream}</p>
