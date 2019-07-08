@@ -52,7 +52,7 @@ const sendMail = async (outgoing) => {
       generateTextFromHTML: true, // plain text body
       attachments: attachments,
       html: `
-      <h3>Order for ${outgoing.name}</h3>
+      <h3 style={{color: "green"}}>Order for ${outgoing.name}</h3>
       <h5>phone number: ${outgoing.phoneNumber}</h5>
       <hr/>
       <p>Order:</p>
