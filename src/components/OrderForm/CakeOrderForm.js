@@ -32,7 +32,7 @@ const Form = props => (
 					</p>
 				</div>
 			</div>
-			<p className="cakeSizeP">
+			<p className='cakeSizeP'>
 				Cake size:
 				<select name='cakeSize' id='cakeSize' onChange={props.handleChange}>
 					<option>Choose...</option>
@@ -117,7 +117,13 @@ const Form = props => (
 			<div className='specialInstructions'>
 				<label placeholder='for example.. Sayings on cake'>Additional requests:</label>
 				<div>
-					<textarea name='cakeRequest' className='addRequests' rows='5' onChange={props.handleChange} placeholder="(ie. sayings: Happy Birthday John, theme for cake..)"/>
+					<textarea
+						name='cakeRequest'
+						className='addRequests'
+						rows='5'
+						onChange={props.handleChange}
+						placeholder='(ie. sayings: Happy Birthday John, theme for cake..)'
+					/>
 				</div>
 				<div>
 					<label className='upload' htmlFor='cakeIdea'>
@@ -144,7 +150,7 @@ const Form = props => (
 						{props.pics &&
 							props.pics.map((thisImage, i) => (
 								<div className='thumbnail' key={i}>
-									<img onClick={() => props.removeThumb(i)} src={thisImage} alt='thumbnail' />
+									<img onClick={props.removeThumb.bind(this, i)} src={thisImage} alt='thumbnail' />
 								</div>
 							))}
 					</div>

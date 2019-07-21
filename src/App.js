@@ -18,39 +18,66 @@ class App extends Component {
 		})
 	}
 	sendEmail = () => {
-		axios.post("/api/submitForm", this.state.order).then(res => {
-			alert('Thank you for your order!')
+		const { files } = this.state
+		axios({
+			method: "post",
+			url: "/api/submitImages",
+			data: files,
+			config: { headers: { "Content-Type": "multipart/form-data" } }
+		}).then(res => {
+			alert("thank you for your order!")
 			this.setState({
 				order: {}
 			})
 		})
+		// axios.post("/api/submitForm", this.state.order).then(res => {
+		// 	alert("Thank you for your order!")
+		// 	this.setState({
+		// 		order: {}
+		// 	})
+		// })
 	}
 	toggleChart = () => {
 		this.setState({
 			bigImage: !this.state.bigImage
 		})
 	}
-	handleFile = e => {
+	handleFiles = e => {
 		if (!e.target.files[0]) {
 			return
 		}
 		const { order } = this.state
-		let files = order.blobs || []
+	
+		let imageURLs = order.imageURLs || []
+		let imagePostData = new FormData()
 		if (e.target.files.length > 1) {
-			let fileSet = [...e.target.files]
-			fileSet.forEach(file => files.push(URL.createObjectURL(file)))
+			let images = [...e.target.files]
+			images.forEach((file,i) => {
+				imageURLs.push(URL.createObjectURL(file))
+				imagePostData.append(`image-${i}`, file)
+			})
 		} else {
-			files.push(URL.createObjectURL(e.target.files[0]))
+			imageURLs.push(URL.createObjectURL(e.target.files[0]))
+			imagePostData.append("image-1", e.target.files[0])
 		}
 		e.target.value = null
-		if (files)
-			this.setState({
-				order: {
-					...this.state.order,
-					blobs: files,
-					files: e.target.files
-				}
-			})
+		
+	
+		axios({
+			method: "post",
+			url: "/api/submitImages",
+			data: imagePostData,
+			config: { headers: { "Content-Type": "multipart/form-data" } }
+		}).then(res => {
+			if (imageURLs)
+				this.setState({
+					order: {
+						...this.state.order,
+						imageURLs
+					},
+					files: imagePostData
+				})
+		})
 	}
 	handleChange = e => {
 		//handle checkboxes
@@ -83,25 +110,27 @@ class App extends Component {
 		})
 	}
 	removeThumb = key => {
-		let files = this.state.order.blobs.slice()
-		files.splice(key, 1)
+		let imageURLs = this.state.order.imageURLs.slice()
+		imageURLs.splice(key, 1)
+		this.state.files.delete(`image-${key}`)
 		this.setState({
 			order: {
 				...this.state.order,
-				blobs: files
+				imageURLs
 			}
+			// files: images
 		})
 	}
 	render() {
-		console.log(this.state.order)
+		console.log(this.state)
 		let viewModel = this.state.viewModel ? "model" : "model hidden"
 		return (
 			<div className='SweetBay'>
 				<Header />
 				<CakeOrderForm
-					handleFile={this.handleFile}
+					handleFile={this.handleFiles}
 					handleChange={this.handleChange}
-					pics={this.state.order.blobs}
+					pics={this.state.order.imageURLs}
 					removeThumb={this.removeThumb}
 					toggleModel={this.toggleModel}
 				/>

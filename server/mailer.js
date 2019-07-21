@@ -8,6 +8,7 @@ const oauth2Client = new OAuth2(process.env.clientId, process.env.clientSecret, 
 oauth2Client.setCredentials({
 	refresh_token: process.env.refreshToken
 })
+
 const sendMail = async outgoing => {
 	const tokens = await oauth2Client.refreshAccessToken()
 	const accessToken = tokens.credentials.access_token
@@ -36,17 +37,18 @@ const sendMail = async outgoing => {
 	} else {
 		outgoing.makeText = "no"
 	}
-	let attachments = []
-	if (outgoing.files) {
-		outgoing.files.forEach(file => {
-			attachments.push({ cid: file })
-		})
-	}
+	// let attachments = outgoing.images.map(image => image)
+	// if (outgoing.files) {
+	// 	outgoing.files.forEach(file => {
+	// 		attachments.push({ cid: file })
+	// 	})
+	// }
 	let info = await transporter.sendMail({
 		from: '"sweetbaycakes29@gmail.com" <sweetbaycakes29@gmail.com>', // sender address
 		to: process.env.sendingTo, // list of receivers
 		subject: `Cake Order for ${outgoing.name}`, // Subject line
 		generateTextFromHTML: true, // plain text body
+		attachments: attachments,
     html: `
       <h3><span style="color:green">Order for </span><span style="font-size:3rem">${outgoing.name}</span>
       <br/>
