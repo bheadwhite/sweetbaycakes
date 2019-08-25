@@ -55,7 +55,7 @@ app.post("/api/removeImage", ({ body: { key } }, res) => {
 
 app.use("/*", (req, res) => {
 	res.sendFile("index.html", {
-		root: `${__dirname}/..build`
+		root: `${__dirname}/../build`
 	})
 })
 const port = process.env.PORT || 3001

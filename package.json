@@ -29,7 +29,5 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
-  },
-  "main": "server/index.js",
-  "proxy": "http://localhost:3001"
+  }
 }
