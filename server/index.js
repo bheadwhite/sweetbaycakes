@@ -11,11 +11,11 @@ const express = require("express"),
 	fs = require("fs")
 require("dotenv").config()
 
-app.use(cors(), bodyParser.json(), helmet(), express.static(`${__dirname}/../build`), express.static(`${__dirname}/uploads`))
+app.use(cors(), bodyParser.json(), helmet(), express.static(`${__dirname}/../build`), express.static(`${__dirname}/../public/uploads`))
 //image upload
 const uploads = multer.diskStorage({
 	destination: (req, file, cb) => {
-		cb(null, `${__dirname}/uploads/`)
+		cb(null, `${__dirname}/../public/uploads/`)
 	},
 	filename: (req, file, cb) => {
 		cb(null, file.fieldname)
@@ -24,10 +24,10 @@ const uploads = multer.diskStorage({
 const imageUpload = multer({ storage: uploads })
 
 app.post("/api/submitForm", (req, res) => {
-	let attachments = fs.readdirSync(path.join(__dirname, "uploads")).map(file => {
+	let attachments = fs.readdirSync(path.join(__dirname, "../public/uploads")).map(file => {
 		return {
 			filename: file,
-			path: path.join(__dirname, `uploads/${file}`)
+			path: path.join(__dirname, `../public/uploads/${file}`)
 		}
 	})
 	mailer(req.body, attachments)
@@ -43,10 +43,10 @@ app.post("/api/uploadImages", imageUpload.any(), (req, res) => {
 })
 app.post("/api/removeImage", ({ body: { key } }, res) => {
 	const regex = new RegExp(`${key}`, "g")
-	fs.readdir(path.join(__dirname, "uploads/"), (err, files) => {
+	fs.readdir(path.join(__dirname, "../public/uploads/"), (err, files) => {
 		files.forEach(file => {
 			if (file.match(regex)) {
-				fs.unlinkSync(path.join(__dirname, `uploads/${file}`))
+				fs.unlinkSync(path.join(__dirname, `../public/uploads/${file}`))
 			}
 		})
 	})
