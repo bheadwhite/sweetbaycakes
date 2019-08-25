@@ -15,7 +15,7 @@ app.use(cors(), bodyParser.json(), helmet(), express.static(`${__dirname}/../bui
 //image upload
 const uploads = multer.diskStorage({
 	destination: (req, file, cb) => {
-		cb(null, "server/uploads/")
+		cb(null, `${__dirname}/uploads/`)
 	},
 	filename: (req, file, cb) => {
 		cb(null, file.fieldname)
