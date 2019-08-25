@@ -1,26 +1,21 @@
 const nodemailer = require("nodemailer"),
-	{ google } = require("googleapis"),
-	OAuth2 = google.auth.OAuth2
+	fs = require("fs"),
+	path = require("path")
 require("dotenv").config()
 
-const oauth2Client = new OAuth2(process.env.clientId, process.env.clientSecret, process.env.redirect)
-
-oauth2Client.setCredentials({
-	refresh_token: process.env.refreshToken
-})
-
-const sendMail = async outgoing => {
-	const tokens = await oauth2Client.refreshAccessToken()
-	const accessToken = tokens.credentials.access_token
+const sendMail = async (outgoing, attachments) => {
 
 	const transporter = nodemailer.createTransport({
-		service: "gmail",
+		host: "smtp.gmail.com",
+		port: 465,
+		secure: true,
 		auth: {
 			type: "OAuth2",
-			user: process.env.nodeEmail,
-			clientId: process.env.clientId,
-			clientSecret: process.env.refreshToken,
-			accessToken: accessToken
+			user: process.env.EMAIL,
+			clientId: process.env.CLIENT_ID,
+			clientSecret: process.env.CLIENT_SECRET,
+			refreshToken: process.env.REFRESH_TOKEN,
+			accessToken: process.env.ACCESS_TOKEN
 		}
 	})
 	let makeMe = ""
@@ -28,28 +23,23 @@ const sendMail = async outgoing => {
 		if (key.startsWith("make") && key !== "makeText") {
 			makeMe = makeMe.concat(`<li>${key.slice(4)}</li>`)
 		}
-  }
-  if (!outgoing.cakeFillings){
-    outgoing.cakeFillings = 'none'
-  }
+	}
+	if (!outgoing.cakeFillings) {
+		outgoing.cakeFillings = "none"
+	}
 	if (outgoing.makeText) {
 		outgoing.makeText = "yes"
 	} else {
 		outgoing.makeText = "no"
 	}
-	// let attachments = outgoing.images.map(image => image)
-	// if (outgoing.files) {
-	// 	outgoing.files.forEach(file => {
-	// 		attachments.push({ cid: file })
-	// 	})
-	// }
-	let info = await transporter.sendMail({
+
+	transporter.sendMail({
 		from: '"sweetbaycakes29@gmail.com" <sweetbaycakes29@gmail.com>', // sender address
-		to: process.env.sendingTo, // list of receivers
+		to: process.env.SEND_TO, // list of receivers
 		subject: `Cake Order for ${outgoing.name}`, // Subject line
 		generateTextFromHTML: true, // plain text body
 		attachments: attachments,
-    html: `
+		html: `
       <h3><span style="color:green">Order for </span><span style="font-size:3rem">${outgoing.name}</span>
       <br/>
       <span style="color:blue">Contact:</span><span style="color:orange"> ${outgoing.phoneNumber}</span>
@@ -73,11 +63,12 @@ const sendMail = async outgoing => {
       <p>${outgoing.contactDetails}</p>
       </div>
       ` // html body
+	}, ()=> {
+		fs.readdirSync(path.join(__dirname, "uploads")).forEach(file => {
+			fs.unlinkSync(path.join(__dirname, `uploads/${file}`))
+		})
 	})
-
-	console.log("message sent: %s", info.messageId)
-
-	console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info))
+	return
 }
 
 module.exports = sendMail

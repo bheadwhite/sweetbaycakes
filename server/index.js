@@ -8,43 +8,49 @@ const express = require("express"),
 	mailer = require("./mailer.js"),
 	multer = require("multer"),
 	path = require("path"),
-	fs = require('fs')
+	fs = require("fs")
 require("dotenv").config()
 
 app.use(cors(), bodyParser.json(), helmet(), express.static(`${__dirname}/../build`))
-
-const upload = multer({ dest: "uploads/" })
-
-const resetUploads = (req, res, next) => {
-	try {
-		fs.readdir(path.join(__dirname, '../uploads'), (err, files) => {
-			if (err) throw err
-			for (const file of files) {
-				fs.unlink(path.join('uploads', file), err => {
-					if (err) throw err;
-				})
-			}
-		})
+//image upload
+const uploads = multer.diskStorage({
+	destination: (req, file, cb) => {
+		cb(null, "server/uploads/")
+	},
+	filename: (req, file, cb) => {
+		cb(null, file.fieldname)
 	}
-	catch (err) {
-		res.send({error: err})
-	}
-	next()
-}
-
-app.post("/api/submitImages", resetUploads, upload.any(), (req, res) => {
-	res.send("ok")
 })
-app.post("/api/submitForm", express.static('uploads'), (req, res) => {
-	console.log(req.body)
-	mailer(req.body)
-		.then(() => res.status(200).send(req.body))
+const imageUpload = multer({ storage: uploads })
+
+app.post("/api/submitForm", (req, res) => {
+	let attachments = fs.readdirSync(path.join(__dirname, "uploads")).map(file => {
+		return {
+			filename: file,
+			path: path.join(__dirname, `uploads/${file}`)
+		}
+	})
+	mailer(req.body, attachments)
+		.then(() => {
+			res.status(200).send(req.body)
+		})
 		.catch(e => {
 			console.log(e)
 		})
-		.finally(() => {
-			resetUploads()
+})
+app.post("/api/uploadImages", imageUpload.any(), (req, res) => {
+	res.send("ok")
+})
+app.post("/api/removeImage", ({ body: { key } }, res) => {
+	const regex = new RegExp(`${key}`, "g")
+	fs.readdir(path.join(__dirname, "uploads/"), (err, files) => {
+		files.forEach(file => {
+			if (file.match(regex)) {
+				fs.unlinkSync(path.join(__dirname, `uploads/${file}`))
+			}
 		})
+	})
+	res.send("ok")
 })
 
 app.use("/*", (req, res) => {

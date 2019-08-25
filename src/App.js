@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { useState, useReducer } from "react"
 import "./App.css"
 import axios from "axios"
 // COMPONENTS
@@ -7,139 +7,130 @@ import Header from "./components/Header/Header"
 import CustomerDetails from "./components/CustomerDetails/CustomerDetails"
 import CakeChart from "./components/CakeChart/CakeChart"
 
-class App extends Component {
-	state = {
-		order: {},
-		viewModel: false
-	}
-	getHappy() {
-		axios.get("/api/get").then(res => {
-			console.log(res)
-		})
-	}
-	sendEmail = () => {
-		const { files } = this.state
-		axios({
-			method: "post",
-			url: "/api/submitImages",
-			data: files,
-			config: { headers: { "Content-Type": "multipart/form-data" } }
-		}).then(res => {
-			alert("thank you for your order!")
-			this.setState({
-				order: {}
+export default function App() {
+	const [modal, setModal] = useState(false)
+	const [user, setUser] = useReducer(userReducer, {})
+	const [order, setOrder] = useReducer(orderReducer, {})
+	const handleOrder = ({ target }) => {
+		if ((target.name.match(/make/g) && order[target.name]) || target.value.match(/choose/gi) || target.value === "None") {
+			setOrder({
+				type: REMOVE_ITEM,
+				payload: target.name
 			})
-		})
-		// axios.post("/api/submitForm", this.state.order).then(res => {
-		// 	alert("Thank you for your order!")
-		// 	this.setState({
-		// 		order: {}
-		// 	})
-		// })
-	}
-	toggleChart = () => {
-		this.setState({
-			bigImage: !this.state.bigImage
-		})
-	}
-	handleFiles = e => {
-		if (!e.target.files[0]) {
 			return
 		}
-		const { order } = this.state
-	
-		let imageURLs = order.imageURLs || []
-		let imagePostData = new FormData()
-		if (e.target.files.length > 1) {
-			let images = [...e.target.files]
-			images.forEach((file,i) => {
-				imageURLs.push(URL.createObjectURL(file))
-				imagePostData.append(`image-${i}`, file)
-			})
-		} else {
-			imageURLs.push(URL.createObjectURL(e.target.files[0]))
-			imagePostData.append("image-1", e.target.files[0])
+		setOrder({
+			type: ADD_ITEM,
+			payload: { [target.name]: target.value }
+		})
+	}
+	const handleUser = ({ target }) => {
+		setUser({
+			type: UPDATE_USER,
+			payload: { [target.name]: target.value }
+		})
+	}
+
+	const addFiles = ({ target: { files } }) => {
+		if (!files[0]) {
+			return
 		}
-		e.target.value = null
-		
-	
+		const formData_Images = new FormData()
+		const fileList = [...files]
+		let totalImages = order.totalImages || 0
+		let URLimages = order.URLimages || []
+		fileList.forEach((file, i) => {
+			//front end images
+			let blob = URL.createObjectURL(file)
+			URLimages.push({ name: `${totalImages}_${file.name}`, blob })
+			//actual files to be sent to backend
+			formData_Images.append(`${totalImages}_${file.name}`, file)
+			totalImages++
+		})
 		axios({
 			method: "post",
-			url: "/api/submitImages",
-			data: imagePostData,
+			url: "/api/uploadImages",
+			data: formData_Images,
 			config: { headers: { "Content-Type": "multipart/form-data" } }
 		}).then(res => {
-			if (imageURLs)
-				this.setState({
-					order: {
-						...this.state.order,
-						imageURLs
-					},
-					files: imagePostData
-				})
-		})
-	}
-	handleChange = e => {
-		//handle checkboxes
-		if (e.target.name.startsWith("make") || e.target.value.startsWith("Choose")) {
-			if (!this.state.order[e.target.name]) {
-				this.setState({
-					order: {
-						...this.state.order,
-						[e.target.name]: true
-					}
-				})
-			} else {
-				delete this.state.order[e.target.name]
-			}
-		} else {
-			this.setState({
-				order: {
-					...this.state.order,
-					[e.target.name]: e.target.value
-				}
+			setOrder({
+				type: ADD_ITEM,
+				payload: { URLimages, totalImages }
 			})
-		}
-	}
-	handleError = e => {
-		e.target.src = "https://png.pngtree.com/svg/20170514/4a5e89db9c.png"
-	}
-	toggleModel = () => {
-		this.setState({
-			viewModel: !this.state.viewModel
 		})
 	}
-	removeThumb = key => {
-		let imageURLs = this.state.order.imageURLs.slice()
-		imageURLs.splice(key, 1)
-		this.state.files.delete(`image-${key}`)
-		this.setState({
-			order: {
-				...this.state.order,
-				imageURLs
-			}
-			// files: images
+	const removeFiles = filename => {
+		let URLimages = order.URLimages.slice()
+		let index = URLimages.findIndex(x => x.name === filename)
+		URLimages.splice(index, 1)
+		axios({
+			method: "post",
+			url: "/api/removeImage",
+			data: { key: filename }
+		}).then(res => {
+			setOrder({
+				type: ADD_ITEM,
+				payload: { URLimages }
+			})
 		})
 	}
-	render() {
-		console.log(this.state)
-		let viewModel = this.state.viewModel ? "model" : "model hidden"
-		return (
-			<div className='SweetBay'>
-				<Header />
-				<CakeOrderForm
-					handleFile={this.handleFiles}
-					handleChange={this.handleChange}
-					pics={this.state.order.imageURLs}
-					removeThumb={this.removeThumb}
-					toggleModel={this.toggleModel}
-				/>
-				<CustomerDetails handleChange={this.handleChange} sendEmail={this.sendEmail} />
-				{this.state.file && <img src={this.state.file} alt='pic' onError={this.handleError} />}
-				<CakeChart viewModel={viewModel} toggleModel={this.toggleModel} />
-			</div>
-		)
+	const sendEmail = () => {
+		axios.post("/api/submitForm", { ...order, ...user }).then(res => {
+			alert('Thank you for your order. We\'ll be in contact with you soon!')
+			setOrder({
+				type: RESET_ORDER
+			})
+			setUser({
+				type: RESET_USER
+			})
+		}).catch(e => {
+			console.log(e)
+		})
 	}
+
+	return (
+		<div className='SweetBay'>
+			<Header />
+			<CakeOrderForm
+				URLimages={order.URLimages}
+				removeFiles={removeFiles}
+				addFiles={addFiles}
+				handleOrder={handleOrder}
+				toggleModal={() => setModal(m => !m)}
+			/>
+			<CustomerDetails handleUser={handleUser} />
+			<button onClick={sendEmail}>Submit Order</button>
+			{/* {state.file && <img src={state.file} alt='pic' onError={handleError} />} */}
+			<CakeChart viewModal={modal ? "model" : "model hidden"} toggleModal={() => setModal(m => !m)} />
+		</div>
+	)
 }
 
-export default App
+const userReducer = (state, action) => {
+	switch (action.type) {
+		case UPDATE_USER:
+			return { ...state, ...action.payload }
+		case RESET_USER:
+			return {}
+		default:
+			return state
+	}
+}
+const orderReducer = (state, action) => {
+	switch (action.type) {
+		case ADD_ITEM:
+			return { ...state, ...action.payload }
+		case REMOVE_ITEM:
+			delete state[action.payload]
+			return { ...state }
+		case RESET_ORDER:
+			return {}
+		default:
+			return state
+	}
+}
+const ADD_ITEM = "ADD_ITEM"
+const REMOVE_ITEM = "REMOVE_ITEM"
+const UPDATE_USER = "UPDATE_USER"
+const RESET_USER = "RESET_USER"
+const RESET_ORDER = "RESET_ORDER"
