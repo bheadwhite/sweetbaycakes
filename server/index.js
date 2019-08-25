@@ -11,7 +11,7 @@ const express = require("express"),
 	fs = require("fs")
 require("dotenv").config()
 
-app.use(cors(), bodyParser.json(), helmet(), express.static(`${__dirname}/../build`))
+app.use(cors(), bodyParser.json(), helmet(), express.static(`${__dirname}/../build`), express.static(`${__dirname}/uploads`))
 //image upload
 const uploads = multer.diskStorage({
 	destination: (req, file, cb) => {
