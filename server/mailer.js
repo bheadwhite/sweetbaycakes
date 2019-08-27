@@ -64,8 +64,8 @@ const sendMail = async (outgoing, attachments) => {
       </div>
       ` // html body
 	}, ()=> {
-		fs.readdirSync(path.join(__dirname, "uploads")).forEach(file => {
-			fs.unlinkSync(path.join(__dirname, `uploads/${file}`))
+		fs.readdirSync(path.join(__dirname, "../public/uploads")).forEach(file => {
+			fs.unlinkSync(path.join(__dirname, `../public/uploads/${file}`))
 		})
 	})
 	return
