@@ -3,8 +3,7 @@ const nodemailer = require("nodemailer"),
 	path = require("path")
 require("dotenv").config()
 
-const sendMail = async (outgoing, attachments) => {
-
+const sendMail = async ({order, sessionID, user}, attachments) => {
 	const transporter = nodemailer.createTransport({
 		host: "smtp.gmail.com",
 		port: 465,
@@ -16,58 +15,73 @@ const sendMail = async (outgoing, attachments) => {
 			clientSecret: process.env.CLIENT_SECRET,
 			refreshToken: process.env.REFRESH_TOKEN,
 			accessToken: process.env.ACCESS_TOKEN
+			
 		}
 	})
 	let makeMe = ""
-	for (key in outgoing) {
-		if (key.startsWith("make") && key !== "makeText") {
-			makeMe = makeMe.concat(`<li>${key.slice(4)}</li>`)
+	if(!user){
+		user = {}
+	}
+	if(order){
+		for (key in order) {
+			if (key.startsWith("make") && key !== "makeText") {
+				makeMe = makeMe.concat(`<li>${key.slice(4)}</li>`)
+			}
 		}
-	}
-	if (!outgoing.cakeFillings) {
-		outgoing.cakeFillings = "none"
-	}
-	if (outgoing.makeText) {
-		outgoing.makeText = "yes"
+		if (!order.cakeFillings) {
+			order.cakeFillings = "none"
+		}
+		if (order.makeText) {
+			order.makeText = "yes"
+		} else {
+			order.makeText = "no"
+		}		
 	} else {
-		outgoing.makeText = "no"
+		order = {}
 	}
 
-	transporter.sendMail({
-		from: '"sweetbaycakes29@gmail.com" <sweetbaycakes29@gmail.com>', // sender address
-		to: process.env.SEND_TO, // list of receivers
-		subject: `Cake Order for ${outgoing.name}`, // Subject line
-		generateTextFromHTML: true, // plain text body
-		attachments: attachments,
-		html: `
-      <h3><span style="color:green">Order for </span><span style="font-size:3rem">${outgoing.name}</span>
-      <br/>
-      <span style="color:blue">Contact:</span><span style="color:orange"> ${outgoing.phoneNumber}</span>
-      </h3>
-      <hr/>
-      <p>Order:</p>
-      <ul>
-        ${makeMe}
-      </ul>
-      <p>size: ${outgoing.cakeSize} inches</p>
-      <p>orientation: ${outgoing.cakeOrientation}</p>
-      <p>flavor: ${outgoing.cakeFlavor}</p>
-      <p>Icing/Cream: ${outgoing.cakeCream}</p>
-      <p>Extra Cake Fillings: ${outgoing.cakeFillings}</p>
-      <p>Additional Requests: ${outgoing.cakeRequest}</p>
-      <hr/>
+	transporter.sendMail(
+		{
+			from: '"sweetbaycakes29@gmail.com" <sweetbaycakes29@gmail.com>', // sender address
+			to: process.env.SEND_TO, // list of receivers
+			subject: `Cake Order for ${user.name}`, // Subject line
+			generateTextFromHTML: true, // plain text body
+			attachments: attachments,
+			textEncoding: "quoted-printable",
+			html: `
+				<h3><span style="color:green">Order for </span><span style="font-size:3rem">${user.name}</span>
+				<br/>
+				<span style="color:blue">Contact:</span><span style="color:orange"> ${user.phoneNumber}</span>
+				</h3>
+				<hr/>
+				<p>Order:</p>
+				<ul>
+					${makeMe}
+				</ul>
+				<p>size: ${order.cakeSize} inches</p>
+				<p>orientation: ${order.cakeOrientation}</p>
+				<p>flavor: ${order.cakeFlavor}</p>
+				<p>Icing/Cream: ${order.cakeCream}</p>
+				<p>Extra Cake Fillings: ${order.cakeFillings}</p>
+				<p>Additional Requests: ${order.cakeRequest}</p>
+				<hr/>
 
-      <div>
-      <h3>Contact Details:</h3>
-      <p>text ok? ${outgoing.makeText}</p>
-      <p>${outgoing.contactDetails}</p>
-      </div>
+				<div>
+				<h3>Contact Details:</h3>
+				<p>text ok? ${user.makeText}</p>
+				<p>${user.contactDetails}</p>
+				</div>
       ` // html body
-	}, ()=> {
-		fs.readdirSync(path.join(__dirname, "../public/uploads")).forEach(file => {
-			fs.unlinkSync(path.join(__dirname, `../public/uploads/${file}`))
-		})
-	})
+		},
+		() => {
+			const regex = new RegExp(`${sessionID}`, "g")
+			fs.readdirSync(path.join(__dirname, "../public/uploads")).forEach(file => {
+				if (file.match(regex)) {
+					fs.unlinkSync(path.join(__dirname, `../public/uploads/${file}`))
+				}
+			})
+		}
+	)
 	return
 }
 

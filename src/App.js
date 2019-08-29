@@ -11,6 +11,11 @@ export default function App() {
 	const [modal, setModal] = useState(false)
 	const [user, setUser] = useReducer(userReducer, {})
 	const [order, setOrder] = useReducer(orderReducer, {})
+	const [sessionID] = useState(
+		Math.random()
+			.toString(36)
+			.substr(2, 3)
+	)
 	const handleOrder = ({ target }) => {
 		if ((target.name.match(/make/g) && order[target.name]) || target.value.match(/choose/gi) || target.value === "None") {
 			setOrder({
@@ -42,9 +47,9 @@ export default function App() {
 		fileList.forEach((file, i) => {
 			//front end images
 			let blob = URL.createObjectURL(file)
-			URLimages.push({ name: `${totalImages}_${file.name}`, blob })
+			URLimages.push({ name: `${totalImages}_${sessionID}_${file.name}`, blob })
 			//actual files to be sent to backend
-			formData_Images.append(`${totalImages}_${file.name}`, file)
+			formData_Images.append(`${totalImages}_${sessionID}_${file.name}`, file)
 			totalImages++
 		})
 		axios({
@@ -52,12 +57,14 @@ export default function App() {
 			url: "/api/uploadImages",
 			data: formData_Images,
 			config: { headers: { "Content-Type": "multipart/form-data" } }
-		}).then(res => {
-			setOrder({
-				type: ADD_ITEM,
-				payload: { URLimages, totalImages }
-			})
 		})
+			.then(res => {
+				setOrder({
+					type: ADD_ITEM,
+					payload: { URLimages, totalImages }
+				})
+			})
+			.catch(e => console.log(e))
 	}
 	const removeFiles = filename => {
 		let URLimages = order.URLimages.slice()
@@ -72,10 +79,10 @@ export default function App() {
 				type: ADD_ITEM,
 				payload: { URLimages }
 			})
-		})
+		}).catch(e => console.log(e))
 	}
 	const sendEmail = () => {
-		axios.post("/api/submitForm", { ...order, ...user }).then(res => {
+		axios.post("/api/submitForm", { order, user, sessionID }).then(res => {
 			alert('Thank you for your order. We\'ll be in contact with you soon!')
 			setOrder({
 				type: RESET_ORDER
@@ -100,7 +107,6 @@ export default function App() {
 			/>
 			<CustomerDetails handleUser={handleUser} />
 			<button onClick={sendEmail}>Submit Order</button>
-			{/* {state.file && <img src={state.file} alt='pic' onError={handleError} />} */}
 			<CakeChart viewModal={modal ? "model" : "model hidden"} toggleModal={() => setModal(m => !m)} />
 		</div>
 	)

@@ -11,11 +11,11 @@ const express = require("express"),
 	fs = require("fs")
 require("dotenv").config()
 
-app.use(cors(), bodyParser.json(), helmet(), express.static(`${__dirname}/../build`), express.static(`${__dirname}/../public/uploads`))
+app.use(cors(), bodyParser.json(), helmet(), express.static(`${__dirname}/../build`), express.static(`${__dirname}/images`))
 //image upload
 const uploads = multer.diskStorage({
 	destination: (req, file, cb) => {
-		cb(null, `${__dirname}/../public/uploads/`)
+		cb(null, `${__dirname}/images`)
 	},
 	filename: (req, file, cb) => {
 		cb(null, file.fieldname)
@@ -24,10 +24,13 @@ const uploads = multer.diskStorage({
 const imageUpload = multer({ storage: uploads })
 
 app.post("/api/submitForm", (req, res) => {
-	let attachments = fs.readdirSync(path.join(__dirname, "../public/uploads")).map(file => {
-		return {
-			filename: file,
-			path: path.join(__dirname, `../public/uploads/${file}`)
+	const regex = new RegExp(`${req.body.sessionID}`, "g")
+	let attachments = fs.readdirSync(path.join(__dirname, "./images")).filter(file => {
+		if(file.match(regex)){
+			return {
+				filename: file,
+				path: path.join(__dirname, `./images/${file}`)
+			}
 		}
 	})
 	mailer(req.body, attachments)
@@ -39,18 +42,20 @@ app.post("/api/submitForm", (req, res) => {
 		})
 })
 app.post("/api/uploadImages", imageUpload.any(), (req, res) => {
-	res.send("ok")
+	res.status(200).send({data: "success"})
 })
 app.post("/api/removeImage", ({ body: { key } }, res) => {
 	const regex = new RegExp(`${key}`, "g")
-	fs.readdir(path.join(__dirname, "../public/uploads/"), (err, files) => {
+	fs.readdir(path.join(__dirname, "./images"), (err, files) => {
 		files.forEach(file => {
 			if (file.match(regex)) {
-				fs.unlinkSync(path.join(__dirname, `../public/uploads/${file}`))
+				fs.unlinkSync(path.join(__dirname, `./images/${file}`))
 			}
 		})
 	})
-	res.send("ok")
+	res.status(200).send({
+		data: 'success'
+	})
 })
 
 app.use("/*", (req, res) => {
