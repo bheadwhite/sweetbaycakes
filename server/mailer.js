@@ -15,13 +15,10 @@ const sendMail = async ({order, sessionID, user}, attachments) => {
 			clientSecret: process.env.CLIENT_SECRET,
 			refreshToken: process.env.REFRESH_TOKEN,
 			accessToken: process.env.ACCESS_TOKEN
-			
+
 		}
 	})
 	let makeMe = ""
-	if(!user){
-		user = {}
-	}
 	if(order){
 		for (key in order) {
 			if (key.startsWith("make") && key !== "makeText") {
@@ -36,8 +33,6 @@ const sendMail = async ({order, sessionID, user}, attachments) => {
 		} else {
 			order.makeText = "no"
 		}		
-	} else {
-		order = {}
 	}
 
 	transporter.sendMail(
@@ -47,7 +42,7 @@ const sendMail = async ({order, sessionID, user}, attachments) => {
 			subject: `Cake Order for ${user.name}`, // Subject line
 			generateTextFromHTML: true, // plain text body
 			attachments: attachments,
-			textEncoding: "quoted-printable",
+			encoding: 'utf-8',
 			html: `
 				<h3><span style="color:green">Order for </span><span style="font-size:3rem">${user.name}</span>
 				<br/>
@@ -75,9 +70,9 @@ const sendMail = async ({order, sessionID, user}, attachments) => {
 		},
 		() => {
 			const regex = new RegExp(`${sessionID}`, "g")
-			fs.readdirSync(path.join(__dirname, "../public/uploads")).forEach(file => {
+			fs.readdirSync(path.join(__dirname, "./images")).forEach(file => {
 				if (file.match(regex)) {
-					fs.unlinkSync(path.join(__dirname, `../public/uploads/${file}`))
+					fs.unlinkSync(path.join(__dirname, `./images/${file}`))
 				}
 			})
 		}

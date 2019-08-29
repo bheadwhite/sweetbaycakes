@@ -25,14 +25,12 @@ const imageUpload = multer({ storage: uploads })
 
 app.post("/api/submitForm", (req, res) => {
 	const regex = new RegExp(`${req.body.sessionID}`, "g")
-	let attachments = fs.readdirSync(path.join(__dirname, "./images")).filter(file => {
+	let attachments = fs.readdirSync(path.join(__dirname, "./images")).reduce((arr, file) => {
 		if(file.match(regex)){
-			return {
-				filename: file,
-				path: path.join(__dirname, `./images/${file}`)
-			}
+			 arr.push({filename: file, path: path.join(__dirname, `/images/${file}`)})
 		}
-	})
+		return arr
+	}, [])
 	mailer(req.body, attachments)
 		.then(() => {
 			res.status(200).send(req.body)
