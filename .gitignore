@@ -2,7 +2,7 @@
 
 # dependencies
 /node_modules
-
+/server/images/*
 # testing
 /coverage
 
