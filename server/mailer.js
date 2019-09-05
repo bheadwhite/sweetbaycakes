@@ -28,10 +28,12 @@ const sendMail = async ({order, sessionID, user}, attachments) => {
 		if (!order.cakeFillings) {
 			order.cakeFillings = "none"
 		}
-		if (order.makeText) {
-			order.makeText = "yes"
+	}
+	if(user){
+		if (user.makeText) {
+			user.makeText = "yes"
 		} else {
-			order.makeText = "no"
+			user.makeText = "no"
 		}		
 	}
 
