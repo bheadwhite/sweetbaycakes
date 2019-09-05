@@ -1,4 +1,9 @@
 /* ******************************* Global Styles ******************************* */
+#root {
+	overflow: hidden;
+	position: relative;
+	min-height: 100vh;
+}
 .SweetBay {
 	position: relative;
 	max-width: 1200px;
@@ -7,7 +12,7 @@
 	background-repeat: no-repeat;
 	background-color: rgba(255, 255, 255, .6);
 	background-blend-mode: lighten;
-	padding-bottom: 300px;
+	background-position: center;
 	margin: auto;
 }
 
@@ -32,4 +37,10 @@ input:not([text="checkbox"]), button {
 }
 input, button {
 	cursor: pointer;
+}
+.submitOrder {
+	margin: .5rem 0 4rem 1rem;
+	border-radius: 5px;
+	font-size: 1.2rem;
+	padding: .5rem;
 }

@@ -1,8 +1,9 @@
 import React from "react"
 import "./CakeOrderForm.css"
+import CircularProgress from "@material-ui/core/CircularProgress"
 import imageIcon from "./../../assets/image.svg"
 
-export default function Form({ handleOrder, URLimages, toggleModal, addFiles, removeFiles }) {
+export default function Form({ handleOrder, URLimages, toggleModal, addFiles, removeFiles, loading }) {
 	return (
 		<div className='cakeOrderForm'>
 			<form>
@@ -33,7 +34,7 @@ export default function Form({ handleOrder, URLimages, toggleModal, addFiles, re
 						</p>
 					</div>
 				</div>
-				<p className='cakeSizeP'>
+				<div className='cakeSizeP'>
 					Cake size:
 					<select name='cakeSize' id='cakeSize' onChange={handleOrder}>
 						<option>Choose...</option>
@@ -44,8 +45,11 @@ export default function Form({ handleOrder, URLimages, toggleModal, addFiles, re
 						<option value='12'>12 inches</option>
 						<option value='14'>14 inches</option>
 					</select>
-					<img className='imageIcon' src={imageIcon} alt='icon' onClick={toggleModal} />
-				</p>
+					<div className="imageIcon">
+						<img src={imageIcon} alt='icon' onClick={toggleModal} />
+						<p>(see sizing guide)</p>
+					</div>
+				</div>
 				<p>
 					Orientation:
 					<select name='cakeOrientation' id='cakeOrienetation' onChange={handleOrder}>
@@ -148,10 +152,11 @@ export default function Form({ handleOrder, URLimages, toggleModal, addFiles, re
 							/>
 						</div>
 						<div className='thumbnails'>
+							{loading && <CircularProgress />}
 							{URLimages &&
 								URLimages.map((image, i) => (
 									<div className='thumbnail' key={i}>
-										<img onClick={()=>removeFiles(image.name)} src={image.blob} alt={image.name} />
+										<img onClick={() => removeFiles(image.name)} src={image.blob} alt={image.name} />
 									</div>
 								))}
 						</div>

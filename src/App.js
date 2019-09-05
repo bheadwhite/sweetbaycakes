@@ -11,6 +11,7 @@ export default function App() {
 	const [modal, setModal] = useState(false)
 	const [user, setUser] = useReducer(userReducer, {})
 	const [order, setOrder] = useReducer(orderReducer, {})
+	const [loading, setLoading] = useState(false)
 	const [sessionID] = useState(
 		Math.random()
 			.toString(36)
@@ -37,6 +38,7 @@ export default function App() {
 	}
 
 	const addFiles = ({ target: { files } }) => {
+		setLoading(true)
 		if (!files[0]) {
 			return
 		}
@@ -63,6 +65,7 @@ export default function App() {
 					type: ADD_ITEM,
 					payload: { URLimages, totalImages }
 				})
+				setLoading(false)
 			})
 			.catch(e => console.log(e))
 	}
@@ -74,42 +77,67 @@ export default function App() {
 			method: "post",
 			url: "/api/removeImage",
 			data: { key: filename }
-		}).then(res => {
-			setOrder({
-				type: ADD_ITEM,
-				payload: { URLimages }
+		})
+			.then(res => {
+				setOrder({
+					type: ADD_ITEM,
+					payload: { URLimages }
+				})
 			})
-		}).catch(e => console.log(e))
+			.catch(e => console.log(e))
 	}
 	const sendEmail = () => {
-		axios.post("/api/submitForm", { order, user, sessionID }).then(res => {
-			alert('Thank you for your order. We\'ll be in contact with you soon!')
-			setOrder({
-				type: RESET_ORDER
+		axios
+			.post("/api/submitForm", { order, user, sessionID })
+			.then(res => {
+				alert("Thank you for your order. We'll be in contact with you soon!")
+				setOrder({
+					type: RESET_ORDER
+				})
+				setUser({
+					type: RESET_USER
+				})
 			})
-			setUser({
-				type: RESET_USER
+			.catch(e => {
+				console.log(e)
 			})
-		}).catch(e => {
-			console.log(e)
-		})
 	}
-
-	return (
-		<div className='SweetBay'>
-			<Header />
-			<CakeOrderForm
-				URLimages={order.URLimages}
-				removeFiles={removeFiles}
-				addFiles={addFiles}
-				handleOrder={handleOrder}
-				toggleModal={() => setModal(m => !m)}
-			/>
-			<CustomerDetails handleUser={handleUser} />
-			<button onClick={sendEmail}>Submit Order</button>
-			<CakeChart viewModal={modal ? "model" : "model hidden"} toggleModal={() => setModal(m => !m)} />
-		</div>
-	)
+	if (modal) {
+		return (
+			<React.Fragment>
+				<div className='SweetBay'>
+					<Header />
+					<CakeOrderForm
+						URLimages={order.URLimages}
+						removeFiles={removeFiles}
+						addFiles={addFiles}
+						loading={loading}
+						handleOrder={handleOrder}
+						toggleModal={() => setModal(m => !m)}
+					/>
+					<CustomerDetails handleUser={handleUser} />
+					<button onClick={sendEmail}>Submit Order</button>
+				</div>
+				<CakeChart toggleModal={() => setModal(m => !m)} />
+			</React.Fragment>
+		)
+	} else {
+		return (
+			<div className='SweetBay'>
+				<Header />
+				<CakeOrderForm
+					URLimages={order.URLimages}
+					removeFiles={removeFiles}
+					addFiles={addFiles}
+					loading={loading}
+					handleOrder={handleOrder}
+					toggleModal={() => setModal(m => !m)}
+				/>
+				<CustomerDetails handleUser={handleUser} />
+				<button className="submitOrder" onClick={sendEmail}>Submit Order</button>
+			</div>
+		)
+	}
 }
 
 const userReducer = (state, action) => {

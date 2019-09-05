@@ -36,14 +36,23 @@
 }
 .imageIcon {
   cursor: pointer;
-  position: absolute;
+  /* position: absolute; */
   width: 2rem;
+  display: flex;
+  align-items: flex-start;
+  height: 1rem;
   margin-left: 2rem;
+}
+.imageIcon p {
+  margin: 0 .4rem;
+  font-size: .8rem;
 }
 .thumbnails {
   display: flex;
   flex-wrap: wrap;
 }
 .cakeSizeP {
-  position: relative;
+  margin: 1rem 0;
+  /* position: relative; */
+  display: flex;
 }
