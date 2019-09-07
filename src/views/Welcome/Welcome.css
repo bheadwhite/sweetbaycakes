@@ -1,0 +1,18 @@
+.box {
+  width: 200px;
+  height: 200px;
+  background: blue;
+  margin: 1rem;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.wrapper {
+  display: flex;
+}
+
+.welcome {
+  font-size: 2rem;
+  text-align:center;
+}
