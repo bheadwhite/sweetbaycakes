@@ -55,6 +55,12 @@ app.post("/api/removeImage", ({ body: { key } }, res) => {
 		data: 'success'
 	})
 })
+app.get("/api/gallery", (req, res)=> {
+	fs.readdir(path.join(__dirname, "./cakes/cupcakes"), (err, files) => {
+		if(err)console.log(err)
+		
+	})
+})
 
 app.use("/*", (req, res) => {
 	res.sendFile("index.html", {

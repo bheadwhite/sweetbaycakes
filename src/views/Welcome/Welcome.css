@@ -1,17 +1,25 @@
 .box {
   width: 200px;
   height: 200px;
-  background: blue;
+  /* background: blue; */
   margin: 1rem;
   text-align: center;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-flow: column;
 }
 .wrapper {
   display: flex;
+  flex-wrap: wrap;
 }
-
+.wrapper > div {
+  text-align: center;
+}
+img {
+  max-height: 100%;
+  max-width: 100%;
+}
 .welcome {
   font-size: 2rem;
   text-align:center;

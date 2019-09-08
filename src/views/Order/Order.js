@@ -1,5 +1,5 @@
 import React, { useState, useReducer } from "react"
-// import "App.css"
+import { Link } from "react-router-dom"
 import axios from "axios"
 // COMPONENTS
 import CakeOrderForm from "components/OrderForm/CakeOrderForm"
@@ -104,9 +104,10 @@ export default function Order() {
 	}
 	if (modal) {
 		return (
-			<React.Fragment>
+			<>
 				<div className='SweetBay'>
 					<Header />
+					<Link to='/'>Back</Link>
 					<CakeOrderForm
 						URLimages={order.URLimages}
 						removeFiles={removeFiles}
@@ -119,12 +120,13 @@ export default function Order() {
 					<button onClick={sendEmail}>Submit Order</button>
 				</div>
 				<CakeChart toggleModal={() => setModal(m => !m)} />
-			</React.Fragment>
+			</>
 		)
 	} else {
 		return (
 			<div className='SweetBay'>
 				<Header />
+				<Link to="/">Back</Link>
 				<CakeOrderForm
 					URLimages={order.URLimages}
 					removeFiles={removeFiles}
@@ -134,7 +136,9 @@ export default function Order() {
 					toggleModal={() => setModal(m => !m)}
 				/>
 				<CustomerDetails handleUser={handleUser} />
-				<button className="submitOrder" onClick={sendEmail}>Submit Order</button>
+				<button className='submitOrder' onClick={sendEmail}>
+					Submit Order
+				</button>
 			</div>
 		)
 	}
